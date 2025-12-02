@@ -1,0 +1,166 @@
+@page { 
+    size: auto;   /* auto is the initial value */ 
+
+    /* this affects the margin in the printer settings */ 
+    margin-bottom: 15mm;  
+    margin-top: 15mm;
+} 
+
+body {
+    color: #000;
+    background-color: #fff; 
+}
+
+.noPrintable {
+    display: none !important;
+}
+
+#appNameWrapper {
+    display: inline-block;
+    text-align: center;
+    padding-bottom: 36px;
+    font-size: 18px;
+    margin-top: -20px;
+}
+
+#appNameLabel {
+    margin-top: 5px;
+}
+
+#footerLogoIcon, 
+#panelPrintButton, 
+#formVerifyDocumentWrapper {
+    display: none !important;
+}
+
+#imgLogo {
+    display: none !important;
+}
+
+#imgLogoPrintable {
+    display: block !important;
+    min-width: 190px;
+    min-height: 28px;
+}
+
+header, 
+.navbar {
+    text-align: center;
+    display: block !important;
+}
+
+footer {
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 20px;
+    bottom: 0;
+    line-height: normal;
+    page-break-after: always;
+}
+
+footer .media-body {
+    display: inline-block;
+}
+
+#copyrightClaimLine2 {
+    display: none;
+    line-height: normal;
+}
+
+.collapse {
+    display: block !important;
+    height: auto !important;
+    width: 800px !important;
+    margin-left: -100px;
+}
+
+#contentsContainer {
+    height: auto !important;
+}
+
+#panelRequestInfoBody {
+    border: #000;
+    border-style: solid;
+    border-width: thin;
+    font-size: 20px;
+    height: 70px;
+    padding-top: 15px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.alert p,
+.list-group-item-info  {
+    color: #000 !important;
+}
+
+.alertErro {
+    -webkit-print-color-adjust: exact; 
+}
+
+.alertAtencao {
+    -webkit-print-color-adjust: exact; 
+}
+
+.alertSucesso2 {
+    -webkit-print-color-adjust: exact; 
+}
+
+#panelResult {
+    margin-top: -30px;
+}
+
+#panelResult.valid {
+    -webkit-print-color-adjust: exact; 
+    background-color: #47b074;
+    align-self: center;
+    margin-left: 60px;
+    margin-right: 20px;
+    padding-bottom: 20px;
+}
+
+#btnShowCertificates,
+#btnShowRawContent {
+    display: none;
+}
+
+#titleCertificatesPrintable,
+#titleRawContentPrintable {
+    display: inline-block !important;
+    color: #000 !important;
+    border: none !important;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.collapseOnly .card-body {
+    padding: 18px !important;
+}
+
+#certificatesList {
+    line-height: 0.5cm;
+}
+
+#certificatesList li,
+#rawContent li {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    word-break: break-word;
+    width: 100%;
+    font-size: smaller;
+}
+
+#viewSourceDocumentToogle {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+#viewSourceDocumentToogle a {
+    color: #000 !important;
+    text-decoration: none !important;
+    margin-left: 5px;
+}

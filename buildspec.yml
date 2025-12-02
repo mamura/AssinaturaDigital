@@ -1,0 +1,11 @@
+version: 0.1
+phases:
+  install:
+    commands:
+      - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - && sudo apt-get install -y nodejs && npm install 
+  build:
+    commands:
+      - echo "******** Install ********
+      - npm install -g serverless
+      - echo "******** Deploy ********"
+      - serverless -v -s $(echo ${CODEBUILD_INITIATOR} | cut -d'/' -f2 | cut -d'_' -f3) deploy --stage prod

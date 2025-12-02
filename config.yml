@@ -1,0 +1,182 @@
+# Deployment stage 
+# Get from --stage option from serverless command call, otherwise get the string specified
+STAGE: ${opt:stage, "dev"}
+
+# Cloud Account configuration
+CLOUD_REGION: us-east-1
+
+# Lambda engine environment
+EXECUTION_TIMEOUT: 10
+VERSION_FUNCTIONS: true
+
+# API Keys
+API_KEYS:
+  - ${self:provider.stage}-${self:service.name, self:service}-s2
+  #- ${self:provider.stage}-${self:service.name, self:service}-signature_status_page
+
+# Network / VPCs
+NETWORK_VPC_NAME: VPC-US-DEV1 # vpc-05b32262 (10.12.0.0/16) | VPC-US-DEV1
+NETWORK_SUBNET_NAMES:
+  - SUBNET-US-DEV1CPRIV # subnet-efd2e3c5 (10.12.6.0/24) | us-east-1d SUBNET-US-DEV1CPRIV
+  - SUBNET-US-DEV1APRIV # subnet-7021c039 (10.12.4.0/24) | us-east-1a SUBNET-US-DEV1APRIV
+  - SUBNET-US-DEV1BPRIV # subnet-ace0d0f4 (10.12.5.0/24) | us-east-1b SUBNET-US-DEV1BPRIV
+NETWORK_SECURITY_GROUP_NAMES:
+  - VaultID-CESS-DEV # sg-032c9cec92be84ce3 (VaultID-CESS-DEV)
+  
+# CORS
+CORS_ORIGINS: "*"
+CORS_HEADERS:
+  - Content-Type
+  - X-Amz-Date
+  - Authorization
+  - X-Api-Key
+  - X-Amz-Security-Token
+  - X-Amz-User-Agent
+
+# Resources general configuration
+DYNAMO_TABLES_READ_THROUGHPUT: 20
+DYNAMO_TABLES_WRITE_THROUGHPUT: 20
+DYNAMO_TABLE_IDEXES_READ_THROUGHPUT: 20
+DYNAMO_TABLE_IDEXES_WRITE_THROUGHPUT: 20
+DYNAMO_TABLES_READ_HEAVY_THROUGHPUT: 40
+DYNAMO_TABLES_WRITE_HEAVY_THROUGHPUT: 40
+DYNAMO_TABLE_IDEXES_READ_HEAVY_THROUGHPUT: 40
+DYNAMO_TABLE_IDEXES_WRITE_HEAVY_THROUGHPUT: 40
+DYNAMO_TABLES_DELETION_POLICE: Retain
+SQS_MESSAGES_VISIBILITY_TIMEOUT: 60
+SQS_REDRIVE_POLICY_MAX_RECEIVE_COUNT: 1
+SQS_REDRIVE_POLICY_MAX_RECEIVE_COUNT_ADMIN_ERROR_NOTIFICATION: 2
+SQS_DELAY_SECONDS_ADMIN_ERROR_NOTIFICATION: 180
+SQS_RETENTION_PERIOD_SECONDS: 150
+SQS_DL_RETENTION_PERIOD_SECONDS: 120
+SQS_DELETION_POLICE: Retain
+KMS_KEY_DELETION_POLICE: Retain
+LOG_GROUP_DELETION_POLICE: Retain
+LOG_RETENTION_IN_DAYS: 7 #The number of days to retain the log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
+
+# Environment variables
+ENVIRONMENT:
+    # Deployment Stage
+    STAGE: ${self:provider.stage}
+    
+    # Cloud Account configuration
+    CLOUD_REGION: ${self:provider.region}
+
+    # General
+    JWT_VERIFY_SIGNATURE: true
+
+    # Lambdas specificities
+    LAMBDA_PROCESS_SIGNATURE_READ_SQS_BATCH_SIZE: 10
+    LAMBDA_SAVE_SIGNED_DOCUMENT_READ_SQS_BATCH_SIZE: 10
+    LAMBDA_NOTIFY_REQUESTER_READ_SQS_BATCH_SIZE: 10
+    LAMBDA_NOTIFY_ADMIN_ON_ERROR_READ_SQS_BATCH_SIZE: 10
+
+    # Resource: S3 Buckets
+    RSRC_SIGNATURE_STATUS_WEBAPP_S3_BUCKET: ${self:provider.stage}-signature-status-webapp-bucket #lab-signature-status-webapp-bucket
+
+    # Resource: SNS Topics
+    RSRC_ADMIN_EMAIL_LIST_GROUP_SNS_TOPIC_ARN: arn:aws:sns:us-east-1:992360098857:it_mgr #arn:aws:sns:us-east-1:157500297918:ITAdmin
+
+    # Resource: DynamoDB Tables
+    RSRC_SIGNATURES_TABLE: ${self:provider.stage}-${self:service.name, self:service}-signatures
+    RSRC_SIGNATURES_CHECK_TABLE: ${self:provider.stage}-${self:service.name, self:service}-signaturesCheck
+    RSRC_SIGNERS_AUTHORIZATION_TABLE: ${self:provider.stage}-${self:service.name, self:service}-signersAuthorization 
+    RSRC_SERVICE_CACHE_TABLE: ${self:provider.stage}-${self:service.name, self:service}-serviceCache 
+    RSRC_SIGNERS_CERTIFICATES_TABLE:  ${self:provider.stage}-${self:service.name, self:service}-signersCertificates
+    RSRC_TRUSTED_CHAIN_CERTIFICATES_TABLE:  ${self:provider.stage}-${self:service.name, self:service}-trustedChainCertificates
+
+    # Resource: SQS Queues / SQS Dead Letter Queues
+    RSRC_PENDING_SIGNATURES_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-pendingSignatures
+    RSRC_PENDING_SIGNATURES_DL_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-dl-pendingSignatures
+    RSRC_READY_OR_ERRORED_SIGNATURES_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-readyOrErroredSignatures 
+    RSRC_READY_OR_ERRORED_SIGNATURES_DL_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-dl-readyOrErroredSignatures
+    RSRC_REGISTERED_READY_SIGNATURES_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-registeredReadySignatures 
+    RSRC_REGISTERED_READY_SIGNATURES_DL_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-dl-registeredReadySignatures
+    RSRC_ADMIN_ERROR_NOTIFICATION_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-adminErrorNotification
+    RSRC_ADMIN_ERROR_NOTIFICATION_DL_QUEUE: ${self:provider.stage}-${self:service.name, self:service}-dl-adminErrorNotification
+
+    # CA / TSA Providers
+    CA_PRV_SOLUTI_BASE_PUBLIC_API_VAULTID_URL: https://apicloudid.hom.vaultid.com.br
+    CA_PRV_SOLUTI_BASE_PUBLIC_API_BIRDID_URL: https://apihom.birdid.com.br
+    CA_PRV_SOLUTI_BASE_CESS_API_URL:  https://cessintdev.drconsulta.com
+    CA_PRV_SOLUTI_TIMESTAMP_AUTHORITY_SERVER_ID: eyJ1cmwiOiJodHRwczpcL1wvY2VzczAxOmZoeTY3ZlRHNThhRzdAY2xvdWQuYnJ5LmNvbS5iclwvY2FyaW1iby1kby10ZW1wb1wvdHNwIn0
+    
+    # APPLICATION SPECIFICITIES
+    ENABLED_CLIENT_CALLBACK_DOMAINS: '[
+                                        {
+                                            "client": "S2",
+                                            "domains": [
+                                                {
+                                                    "domain": "apidev.drconsulta.com",
+                                                    "auth": {
+                                                        "enabled": true,
+                                                        "type": "basicAuth"
+                                                    }
+                                                },
+                                                {
+                                                    "domain": "ry4pah9pd7.execute-api.us-east-1.amazonaws.com",
+                                                    "auth": {
+                                                        "enabled": true,
+                                                        "type": "basicAuth"
+                                                    }
+                                                },
+                                                {
+                                                    "domain": "s2dev.drconsulta.com",
+                                                    "auth": {
+                                                        "enabled": true,
+                                                        "type": "apiKey"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                      ]'
+
+    ENABLED_CLIENT_SOURCE_DOCUMENTS_ORIGINS: '[
+                                                {
+                                                    "client": "S2",
+                                                    "origin": {
+                                                        "domain": "apidev.drconsulta.com",
+                                                        "port": 2456,
+                                                        "route": "/v01/assinaturadigital/get_url_arquivos_pdf",
+                                                        "auth": {
+                                                            "enabled": true,
+                                                            "type": "basicAuth"
+                                                        },
+                                                        "acceptableMediaTypes": [
+                                                            "application/pdf", 
+                                                            "text/html"
+                                                        ],
+                                                        "responseMapping": {
+                                                            "dataProperty": "data",
+                                                            "dataTemplate": {
+                                                                "originFileId": "id_arquivo",
+                                                                "fileUrl": "url",
+                                                                "fileTitle": "descricao",
+                                                                "isFileAvailable": "disponivel_sn",
+                                                                "isFileAvailableMap": {
+                                                                    "S": true,
+                                                                    "N": false
+                                                                },
+                                                                "fileAvailableStamp": "disponivel_em"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]'
+
+    CLIENT_SOURCE_DOCUMENT_FIELD_MAPPINGS: '[
+                                                {
+                                                    "client": "S2",
+                                                    "fieldMappings": [
+                                                        {
+                                                            "applicableDocumentKinds": ["*"],
+                                                            "rootNode": "prontuario",
+                                                            "subjectNameNode": "paciente",
+                                                            "subjectIdentityNode": "documento",
+                                                            "subjectIdentityKindNode": "tipo_documento",
+                                                            "subjectBirthDateNode": "data_nascimento"
+                                                        }
+                                                    ]
+                                                }
+                                            ]'
+

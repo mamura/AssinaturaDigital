@@ -1,0 +1,15 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# VS Code
+.vscode
+
+# Debug and log files
+*.log
+
+# Miscelaneous
+_warmup

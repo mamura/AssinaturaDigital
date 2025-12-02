@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
+    <meta name="description" content="Verificador de documentos assinados digitalmente no dr.consulta">
+    <meta name="robots" content="none">
+    <link rel="shortcut icon" href="assets/images/favicon/favicon.ico">
+    <title>Verificador de Documentos com Assinatura Digital | dr.consulta</title> 
+
+    <!-- Libraries -->
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="assets/vendors/fontawesome/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="assets/css/drc-base/css/base.css" rel="stylesheet">
+    <link href="assets/css/main.css" media="screen" rel="stylesheet">
+    <link href="assets/css/print.css" media="print" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <img src="assets/css/drc-base/images/icons/branco-com-azul/knife.svg" style="display: none;" />
+    <img src="assets/css/drc-base/images/icons/rosa-com-azul/not-found.svg" style="display: none;" />
+    <img src="assets/css/drc-base/images/icons/branco-com-azul/fail.svg" style="display: none;" />
+    <img src="assets/css/drc-base/images/icons/amarelo-com-azul/book-ok.svg" style="display: none;" />
+    <img src="assets/css/drc-base/images/icons/amarelo-com-azul/calendar-atention.svg"" style="display: none;" />
+
+    <div class="noPrintable" id="preloader">
+        <div id="status">
+            <div id="spinLoading" class=""></div>
+        </div>
+    </div>
+
+    <div id="contentsContainer">
+        <header>
+            <nav class="navbar navbar-light bg-light static-top">
+                <div class="container">
+                  <a id="imgLogo" class="navbar-brand logo" href="https://www.drconsulta.com" target="_blank"></a>
+                  <img id="imgLogoPrintable" src="assets/css/drc-base/images/logo-default.svg" />
+                </div>
+            </nav>
+        </header>
+
+        <main class="container-fluid mt-32-n">
+                <div id="appNameWrapper" class="row mb-8-n">
+                    <div id="appNameContainer" class="container">
+                        <i id="appNameIcon" class="fas fa-fingerprint fa-4x"></i>
+                        <div id="appNameLabel" class="pl-8-n">
+                            Verificação de Documentos com Assinatura Digital
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="formVerifyDocumentWrapper" class="row">         
+                    <form id="formVerifyDocument" method="POST" novalidate autocomplete="off">
+                        <p>Insira a chave de verificação para validar o documento.</p>
+                        <div class="form-row align-items-center">
+                            <div class="col-8">
+                                <label class="sr-only" for="verifierKey">Chave de verificação</label>
+                                <input type="text" class="form-control inputMedium mb-2" id="verifierKey" name="verifierKey" placeholder="Chave de verificação" data-inputmask="'mask': '# # # # # # # # # . # # # # # # #'" required>
+                                <small class="msg-required">*Campo obrigatório</small>
+                            </div>
+                            <div class="col-4" style="text-align: center;">
+                                <button id="btnSubmitVerifyDocument" type="button" class="buttonMedium mb-32-n">Verificar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    
+                <div id="panelResult" class="row mt-8-n" style="display: none;">
+                    <div class="col-lg-3 col-md-3 col-sm-1"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-10">
+                            <div id="resultVerifyDocumentWrapper" class="alert" role="alert">
+                                <div class="media">
+                                    <img id="resultVerifyDocumentIcon" src="" class="mr-3" alt="">
+                                    <div class="media-body">
+                                        <h4 id="resultVerifyDocumentTitle" class="mt-0"></h4>
+                                        <div id="resultVerifyDocumentBody">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-1"></div>
+                </div>
+    
+                <div id="panelRequestInfo" class="row mt-8-n" style="display: none;">
+                    <div class="col-lg-3 col-md-3 col-sm-1"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-10">
+                            <div class="alert alertMensagem" role="alert">
+                                <div id="panelRequestInfoBody">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-1"></div>
+                </div>
+
+                <div id="panelPrintButton" class="row mt-32-n text-center" style="display: none;">
+                    <div class="col-lg-3 col-md-3 col-sm-1"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-10">
+                        <button id="btnPrint" type="button" class="buttonSmall buttonGray mb-16-n"><i class="fas fa-print"></i> Imprimir</button>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-1"></div>
+                </div>
+        </main>
+    
+        <footer>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg">
+                        <div class="media">
+                            <a href="https://www.drconsulta.com" target="_blank"><img id="footerLogoIcon" src="assets/css/drc-base/images/logo-default-reduzido.svg" class="align-self-center mr-3" alt="dr.consulta"></a>
+                            <div class="media-body">
+                                <h5 id="copyrightClaimLine1" class="Blue">&copy; dr.consulta 2019</h5>
+                                <p id="copyrightClaimLine2" class="Blue" style="margin-bottom: 0;">Todos os direitos reservados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <div id="modalViewSourceDocument" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div id="modalViewSourceDocumentHeader" class="modal-header">
+                        <h5 id="modalViewSourceDocumentTitle" class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                        </button>
+                    </div>
+                    <div id="modalViewSourceDocumentBody" class="modal-body">
+                        <p></p>
+                    </div>
+                    <div id="modalViewSourceDocumentFooter" class="modal-footer">
+                        <button type="button" class="btn buttonSmall buttonLineGray mr-16-n" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Core JavaScript -->
+    <script type="text/JavaScript" src="assets/vendors/jquery/jquery.min.js"></script>
+    <script type="text/JavaScript" src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/JavaScript" src="assets/vendors/inputmask/inputmask/inputmask.min.js"></script>
+    <script type="text/JavaScript" src="assets/vendors/inputmask/inputmask/jquery.inputmask.min.js"></script>
+    <script type="text/JavaScript" src="assets/vendors/inputmask/inputmask/bindings/inputmask.binding.min.js"></script>
+    <script type="text/JavaScript" src="assets/vendors/jqueryvalidation/jquery.validate.min.js"></script>
+    <script type="text/JavaScript" src="assets/vendors/vkbeautify/vkbeautify.js"></script>
+    <script type="text/JavaScript" src="constants.js"></script>
+    <script type="text/JavaScript" src="assets/js/main.js"></script>
+  </body>
+
+</html>
+
+ 
