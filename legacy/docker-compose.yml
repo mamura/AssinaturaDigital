@@ -1,0 +1,42 @@
+services:
+  app:
+    build: .
+    container_name: assinatura-app
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - STAGE=local
+      - SERVERLESS_ACCESS_KEY=AKA6v9Odgu2JNPmXAZKD9xC6TCpLx1P87oiTAJno9lQkT
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+      - LOCALSTACK_HOSTNAME=localstack
+      - LOCALSTACK_HOST=localstack
+      - EDGE_PORT=4566
+
+  ui:
+    image: nginx:1.27-alpine
+    container_name: assinatura-ui
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public/signatueStatus:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx.conf:ro
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: assinatura-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb,sqs,s3,sns
+      - EDGE_PORT=4566
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "./.localstack:/var/lib/localstack"

@@ -1,45 +1,23 @@
 {
-  "name": "digital-signature",
+  "name": "digital-signature-v2",
   "version": "1.0.0",
-  "description": "REST API backend for handling digital signatures.",
-  "engines": {
-    "node": ">=8.10"
+  "description": "Digital signature API (rewritten, Node 22 + Serverless 4).",
+  "type": "module",
+  "scripts": {
+    "dev": "serverless offline --stage local",
+    "deploy": "serverless deploy",
+    "invoke:local": "serverless invoke local"
   },
-  "engineStrict": true,
-  "scripts": {},
-  "keywords": [
-    "REST API",
-    "Digital signature",
-    "AWS Lambda",
-    "Serverless",
-    "CAdES",
-    "ICP Brasil"
-  ],
-  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
-    "ajv": "^6.6.1",
-    "ajv-async": "^1.0.1",
-    "asn1js": "2.0.21",
-    "async": "2.6.2",
-    "async-retry": "1.2.3",
-    "axios": "^0.19.0",
-    "axios-retry": "3.1.2",
-    "ejs": "2.6.1",
-    "fast-xml-parser": "^3.12.16",
-    "form-data": "^2.3.3",
-    "jwt-simple": "^0.5.6",
-    "node-gzip": "^1.1.2",
-    "pkijs": "2.1.74",
-    "shortid": "2.2.14",
-    "text-table": "0.2.0",
-    "uuid": "^3.3.2"
+    "@aws-sdk/client-dynamodb": "^3.670.0",
+    "@aws-sdk/client-sqs": "^3.670.0",
+    "@aws-sdk/lib-dynamodb": "^3.664.0"
   },
   "devDependencies": {
-    "aws-sdk": "^2.451.0",
-    "serverless-apigw-binary": "^0.4.4",
-    "serverless-iam-roles-per-function": "^1.0.4",
-    "serverless-offline": "^3.31.3",
-    "serverless-plugin-warmup": "^4.4.3-rc.1",
-    "serverless-vpc-discovery": "^1.0.13"
+    "serverless": "^4.26.1",
+    "serverless-offline": "^14.3.3"
   }
 }
