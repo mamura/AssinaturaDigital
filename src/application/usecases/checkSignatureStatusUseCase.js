@@ -9,7 +9,24 @@ export function makeCheckSignatureStatusUseCase({ signaturesRepository }) {
   const signatureStatusService = new SignatureStatusService();
 
   return async function checkSignatureStatusUseCase({ requestIdOrShortId }) {
-    // Detecta se é UUID
+    // Validação do parametro
+    if (!requestIdOrShortId || typeof requestIdOrShortId !== 'string') {
+      throw new DomainError(
+        "InvalisRequerstIdOrShortId",
+        "Parameter 'requestIdOrShortId'must be a non-empty string.",
+        400
+      );
+    }
+
+    if (requestIdOrShortId.trim().length < 17) {
+      throw new DomainError(
+        "InvalisRequerstIdOrShortId",
+        "Parameter 'requestIdOrShortId'must have at leat 17 characters.",
+        400
+      );
+    }
+
+    // Detecta se é UUID ou shortId
     const isUuid = /^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$/.test(requestIdOrShortId);
 
     const records = isUuid

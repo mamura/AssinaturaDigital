@@ -20,6 +20,10 @@ export class SignatureStatusService {
         files: [],
       },
       verifyingTimeStamp: Date.now(),
+      authenticityCode: null,
+      verifierKey: null,
+      longId: signatureRecord.requestId ?? null,
+      replacedBy: null,
     };
   }
 }
