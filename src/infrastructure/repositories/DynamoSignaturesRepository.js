@@ -65,4 +65,19 @@ export class DynamoSignaturesRepository extends SignaturesRepositoryContract
     const command = new UpdateCommand(params);
     await this.client.send(command);
   }
+
+  async findDetailsForStatusCheck(requestId)
+  {
+    const params = {
+      TableName: this.tableName,
+      KeyConditionExpression: "requestId = :requestId",
+      ExpressionAttributeValues: {
+        ":requestId": requestId,
+      },
+      Limit: 1,
+    };
+
+    const { Items } = await this.client.send(new QueryCommand(params));
+    return (Items && Items[0]) || null;
+  }
 }

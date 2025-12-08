@@ -10,4 +10,8 @@ export class SignaturesRepositoryContract {
   async incrementCheckCounter(key, checkId, initializeIfMissing) {
     throw new Error("Method incrementCheckCounter(...) must be implemented");
   }
+
+  async findDetailsForStatusCheck(requestId) {
+    throw new Error("Method findDetailsForStatusCheck(requestId) must be implemented");
+  }
 }

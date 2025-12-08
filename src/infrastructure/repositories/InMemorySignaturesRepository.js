@@ -1,42 +1,60 @@
 import { SignaturesRepositoryContract } from "../../application/contracts/SignaturesRepositoryContract.js";
 
 export class InMemorySignaturesRepository extends SignaturesRepositoryContract {
-  constructor() {
+  constructor(initialData = []) {
     super();
-
-    this.items = [
-      {
-        requestId: "11111111-1111-1111-1111-111111111111",
-        signerIdentity: "12345678900",
-        shortId: "12345678901234567",
-        sts: "SIGNED",
-      },
-    ];
+    this.records = [...initialData];
   }
 
   async queryByShortId(shortId) {
-    return this.items.filter((item) => item.shortId === shortId);
+    return this.records.filter((item) => item.shortId === shortId);
   }
 
   async queryByRequestId(requestId) {
-    return this.items.filter((item) => item.requestId === requestId);
+    return this.records.filter((item) => item.requestId === requestId);
   }
 
   async incrementCheckCounter(key, checkId, initializeIfMissing) {
-    const item = this.items.find(
+    const idx = this.records.find(
       (it) =>
         it.requestId === key.requestId &&
         it.signerIdentity === key.signerIdentity
     );
 
-    if (!item) {
+    if (idx === -1) {
+      if (!initializeIfMissing) {
+        return;
+      }
+      
+      this.records.push({
+        requestId: key.requestId,
+        signerIdentity: key.signerIdentity,
+        shortId: null,
+        sts: "UNKNOWN",
+        unsignedDocument: null,
+        signedDocument: null,
+        replacedBy: null,
+        checkCounter: 1,
+      });
+
       return;
     }
 
-    if (typeof item.checkCounter === "undefined") {
-      item.checkCounter = initializeIfMissing ? 0 : 1;
-    }
+    const current = this.records[idx];
+    const base = initializeIfMissing
+      ? current.checkCounter ?? 0
+      : current.checkCounter ?? 1;
 
-    item.checkCounter += 1;
+    this.records[idx] = {
+      ...current,
+      checkCounter: base + 1,
+      lastCheckId: checkId,
+    };
+  }
+
+  async findDetailsForStatusCheck(requestId) {
+    return (
+      this.records.find((r) => r.requestId === requestId) || null
+    );
   }
 }

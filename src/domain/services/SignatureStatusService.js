@@ -1,12 +1,28 @@
 export class SignatureStatusService {
-  buildStatusResponse(signatureRecord) {
-    const status = signatureRecord.sts === "SIGNED" ? "VALID" : "INVALID";
+  /**
+   * 
+   * @param {object} signatureRecord // registro principal (sts, requestId, signerIdentity, shortId, etc.)
+   * @param {object|null} signatureDetails //detalhes adicionais (unsignedDocument, signedDocument, replacedBy, ...)
+   */
+  buildStatusResponse(signatureRecord, signatureDetails = null) {
+    let status      = signatureRecord.sts === "SIGNED" ? "VALID" : "INVALID";
+    let kind        = null;
+    let replacedBy  = null;
+
+    if (signatureDetails) {
+      kind = signatureDetails?.unsignedDocument?.kind ?? null;
+
+      if (signatureDetails.replacedBy) {
+        status      = "REPLACED";
+        replacedBy  = signatureDetails.replacedByShortId ?? null;
+      }
+    }
 
     return {
       status,
       documentRealm: "private",
       signingTimeStamp: null,
-      kind: null,
+      kind,
       signerName: null,
       certificates: [],
       rawContent: null,
@@ -23,7 +39,7 @@ export class SignatureStatusService {
       authenticityCode: null,
       verifierKey: null,
       longId: signatureRecord.requestId ?? null,
-      replacedBy: null,
+      replacedBy,
     };
   }
 }

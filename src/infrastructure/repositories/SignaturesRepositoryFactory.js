@@ -14,5 +14,23 @@ export const makeSignaturesRepository = () => {
   //}
 
   console.log("[SignaturesRepository] Using InMemorySignaturesRepository");
-  return new InMemorySignaturesRepository();
+  return new InMemorySignaturesRepository([
+    {
+      requestId: "test-request-uuid-1",
+      shortId: "12345678901234567",
+      signerIdentity: "12345678900",
+      sts: "SIGNED",
+      unsignedDocument: {
+        kind: "EHR",
+        xmlContent: "<root><foo>bar</foo></root>",
+        compression: null,
+      },
+      signedDocument: {
+        signedContent: "signed-content-mock",
+        compression: null,
+      },
+      replacedBy: null,
+      checkCounter: 0,
+    },
+  ]);
 };
