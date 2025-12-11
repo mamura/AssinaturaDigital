@@ -30,7 +30,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./public/signatueStatus:/usr/share/nginx/html:ro
+      - ./public:/usr/share/nginx/html:ro
       - ./docker/nginx.conf:/etc/nginx.conf:ro
 
   localstack:
