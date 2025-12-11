@@ -45,5 +45,18 @@ services:
     volumes:
       - "./.localstack:/var/lib/localstack"
 
+  terraform:
+    image: hashicorp/terraform:1.9
+    container_name: terraform-cli
+    working_dir: /workspace/terraform  
+    volumes:
+      - ./:/workspace
+    depends_on:
+      - localstack
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+
 volumes:
   node_modules:

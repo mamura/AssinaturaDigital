@@ -8,7 +8,11 @@ import { SignatureStatusService } from "../../domain/services/SignatureStatusSer
 export function makeCheckSignatureStatusUseCase({ signaturesRepository }) {
   const signatureStatusService = new SignatureStatusService();
 
-  return async function checkSignatureStatusUseCase({ requestIdOrShortId }) {
+  return async function checkSignatureStatusUseCase({
+    requestIdOrShortId,
+    subjectAuthorizeParamValue = null,
+    subjectAuthorizeParamKind = null,
+  } = {}) {
     // Validação do parametro
     if (!requestIdOrShortId || typeof requestIdOrShortId !== 'string') {
       throw new DomainError(
@@ -50,8 +54,11 @@ export function makeCheckSignatureStatusUseCase({ signaturesRepository }) {
     }
 
     const signatureRecord = records[0];
+    
     let signatureDetails  = null;
+    let replacedByShortId = null;
 
+    // Só carrega detalhes se o status for SIGNED
     if (signatureRecord.sts === "SIGNED") {
       signatureDetails = 
         await signaturesRepository.findDetailsForStatusCheck(
@@ -66,7 +73,15 @@ export function makeCheckSignatureStatusUseCase({ signaturesRepository }) {
         );
       }
 
-      // se houver replacedBy, tenta descolbrir o shortId da assinatura de substituição
+      if (!signatureDetails?.unsignedDocument?.kind) {
+        throw new DomainError(
+          "MissingDocumentKind",
+          "There is an inconsistency error: document kind not recorded on DB! Unable to proceed.",
+          409
+        );
+      }
+
+      // se houver replacedBy, tenta descobrir o shortId da assinatura de substituição
       if (signatureDetails.replacedBy) {
         try {
           const replacementRecords = await signaturesRepository.queryByRequestId(signatureDetails.replacedBy);
@@ -79,11 +94,27 @@ export function makeCheckSignatureStatusUseCase({ signaturesRepository }) {
             signatureDetails.replacedByShortId = replacementRecords[0].shortId;
           }
         } catch (e) {
-          //
+          console.warn(
+            "Error loading replacement signature data, proceeding with REPLACED without shortId",
+            err
+          );
         }
       }
     }
 
-    return signatureStatusService.buildStatusResponse(signatureRecord, signatureDetails);
+    if (signatureDetails) {
+      signatureDetails.replacedByShortId = replacedByShortId;
+    }
+
+    const subjectAuthorizeParams = {
+      paramKind: subjectAuthorizeParamKind,
+      paramValue: subjectAuthorizeParamValue,
+    };
+
+    return signatureStatusService.buildStatusResponse(
+      signatureRecord,
+      signatureDetails,
+      subjectAuthorizeParams
+    );
   }
 }

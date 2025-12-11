@@ -7,8 +7,18 @@ const checkSignatureStatusUseCase = makeCheckSignatureStatusUseCase({ signatures
 
 export const handler = async (event, context) => {
   try {
-    const { requestIdOrShortId } = event.pathParameters || {}; 
-    const result = await checkSignatureStatusUseCase({ requestIdOrShortId });
+    const { requestIdOrShortId } = event.pathParameters || {};
+
+    const {
+      subjectAuthorizeParamKind = null,
+      subjectAuthorizeParamValue = null,
+    } = event.queryStringParameters || {};
+
+    const result = await checkSignatureStatusUseCase({
+      requestIdOrShortId,
+      subjectAuthorizeParamKind,
+      subjectAuthorizeParamValue
+    });
 
     return responseSuccess(context.awsRequestId, result);
   
