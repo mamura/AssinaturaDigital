@@ -1,6 +1,7 @@
 import { GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { dynamoClient, serviceCacheTableName } from "../aws/dynamoClient";
 import { ServiceCacheEntry } from "../../domain/entities/ServiceCacheEntry";
+import { ServiceCacheRepositoryContract } from "../../application/contracts/ServiceCacheRepositoryContract";
 
 export class DynamoServiceCacheRepository extends ServiceCacheRepositoryContract
 {

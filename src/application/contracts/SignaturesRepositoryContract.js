@@ -14,8 +14,28 @@ export class SignaturesRepositoryContract {
    * @param {string} requestId
    * @returns {Promise<import('../../domain/signatures/SignatureRequest') | null>}
    */
-  async findByRequestId(requestId) {
+  async findByRequestIdAndSigner(requestId, signerIdentity) {
     throw new Error("Method findByRequestId(requestId) must be implemented");
+  }
+
+  /**
+   * Busca uma assinatura pelo seu shortId
+   * @param {string} shortId
+   * @returns {Promise<import('../../domain/entities/Signature.js').Signature | null>}
+   */
+  async findByShortId(shortId) {
+    throw new Error("Method findByShortId(shortId) must be implemented");
+  }
+
+  /**
+   * Atualiza campos mutáveis da assinatura
+   * @param {string} requestId
+   * @param {string} signerIdentity
+   * @param {Partial<import('../../domain/entities/Signature.js').Signature>} partial
+   * @returns {Promise<void>}
+   */
+  async update(requestId, signerIdentity, partial) {
+    throw new Error("Method update(requestId, signerIdentity, partial) must be implemented");
   }
 
   /**
@@ -24,22 +44,5 @@ export class SignaturesRepositoryContract {
    */
   async generateShortId() {
     throw new Error("Method generateShortId() must be implemented");
-  }
-
-
-  async queryByShortId(shortId) {
-    throw new Error("Method queryByShortId(shortId) must be implemented");
-  }
-
-  async queryByRequestId(requestId) {
-    throw new Error("Method queryByRequestId(requestId) must be implemented");
-  }
-
-  async incrementCheckCounter(key, checkId, initializeIfMissing) {
-    throw new Error("Method incrementCheckCounter(...) must be implemented");
-  }
-
-  async findDetailsForStatusCheck(requestId) {
-    throw new Error("Method findDetailsForStatusCheck(requestId) must be implemented");
   }
 }

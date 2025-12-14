@@ -2,6 +2,7 @@
 import { PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { dynamoClient, signersAuthorizationsTableName } from "../aws/dynamoClient";
 import { RequestOrigin } from '../../domain/valueObjects/RequestOrigin';
+import { SignersAuthorizationRepositoryContract } from '../../application/contracts/SignersAuthorizationRepositoryContract';
 
 export class DynamoSignerAuthorizationDynamoRepository extends SignersAuthorizationRepositoryContract
 {

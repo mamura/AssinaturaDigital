@@ -7,11 +7,12 @@ import {
 
 import { SignatureCheck } from '../../domain/entities/signatures/SignatureCheck.js';
 import { RequestOrigin } from '../../domain/valueObjects/RequestOrigin.js';
-// crie um contrato equivalente, ex: SignatureCheckRepositoryContract
 import { SignatureCheckRepositoryContract } from '../../application/contracts/SignatureCheckRepositoryContract.js';
 
-export class DynamoSignaturesCheckRepository extends SignatureCheckRepositoryContract {
-  constructor(docClient = dynamoClient, tableName = signaturesCheckTableName) {
+export class DynamoSignaturesCheckRepository extends SignatureCheckRepositoryContract
+{
+  constructor(docClient = dynamoClient, tableName = signaturesCheckTableName)
+  {
     super();
     this.docClient = docClient;
     this.tableName = tableName;
@@ -20,7 +21,8 @@ export class DynamoSignaturesCheckRepository extends SignatureCheckRepositoryCon
   /**
    * Salva um registro de checagem de status.
    */
-  async create(check) {
+  async create(check)
+  {
     const item = this._toItem(check);
 
     const command = new PutCommand({
@@ -36,7 +38,8 @@ export class DynamoSignaturesCheckRepository extends SignatureCheckRepositoryCon
    * (Se existir mais de um, este método retorna apenas o último salvo;
    *  se você precisar de histórico completo, pode evoluir para Query).
    */
-  async findByRequestId(requestId) {
+  async findByRequestId(requestId)
+  {
     const command = new GetCommand({
       TableName: this.tableName,
       Key: { requestId },
@@ -48,7 +51,8 @@ export class DynamoSignaturesCheckRepository extends SignatureCheckRepositoryCon
     return this._fromItem(Item);
   }
 
-  _toItem(check) {
+  _toItem(check)
+  {
     return {
       requestId: check.requestId,
       signatureRequestId: check.signatureRequestId,
@@ -61,7 +65,8 @@ export class DynamoSignaturesCheckRepository extends SignatureCheckRepositoryCon
     };
   }
 
-  _fromItem(item) {
+  _fromItem(item)
+  {
     return new SignatureCheck({
       requestId: item.requestId,
       signatureRequestId: item.signatureRequestId,
