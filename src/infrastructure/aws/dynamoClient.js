@@ -10,5 +10,16 @@ const dynamoBaseClient = new DynamoDBClient({
   },
 });
 
-export const dynamoClient         = DynamoDBDocumentClient.from(dynamoBaseClient);
-export const signaturesTableName  = process.env.SIGNATURES_TABLE_NAME || "SignaturesTableLocal";
+export const dynamoClient = DynamoDBDocumentClient.from(dynamoBaseClient, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  }
+});
+
+export const signaturesTableName            = process.env.SIGNATURES_TABLE_NAME || "SignaturesTableLocal";
+export const signaturesChecksTableName      = process.env.SIGNATURE_CHECKS_TABLE_NAME || "SignatureChecksTableLocal";
+export const signersAuthorizationsTableName = process.env.SIGNER_AUTHORIZATIONS_TABLE_NAME || "SignerAuthorizationsTableLocal";
+export const serviceCacheTableName          = process.env.SERVICE_CACHE_TABLE_NAME || "ServiceCacheTableLocal";
