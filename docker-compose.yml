@@ -9,20 +9,31 @@ services:
     environment:
       - NODE_ENV=development
       - STAGE=local
-      - SERVERLESS_ACCESS_KEY=AKA6v9Odgu2JNPmXAZKD9xC6TCpLx1P87oiTAJno9lQkT
+      
+      # AWS fake credentials (ok)
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_REGION=us-east-1
       - AWS_DEFAULT_REGION=us-east-1
+
+      # DynamoDB endpoint (ESSENCIAL)
+      - DYNAMODB_ENDPOINT=http://localstack:4566
+
+      # Tabelas (opcional mas recomendado)
+      - SIGNATURES_TABLE_NAME=SignaturesTableLocal
+      - SIGNATURES_CHECK_TABLE_NAME=SignaturesCheckTableLocal
+      - SIGNERS_AUTHORIZATION_TABLE_NAME=SignersAuthorizationTableLocal
+      - SERVICE_CACHE_TABLE_NAME=ServiceCacheTableLocal
+
+      # LocalStack helpers (opcionais)
       - LOCALSTACK_HOSTNAME=localstack
       - LOCALSTACK_HOST=localstack
       - EDGE_PORT=4566
-      - USE_IN_MEMORY_DB=true
-      - SIGNATURES_REPOSITORY_DRIVER=memory
+
     volumes:
       - .:/usr/src/app
       - node_modules:/usr/src/app/node_modules
-    command: npm run dev
+
 
   ui:
     image: nginx:1.27-alpine

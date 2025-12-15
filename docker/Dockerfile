@@ -7,10 +7,9 @@ COPY package*.json ./
 RUN npm install
 
 # Copia o restante do código
-COPY serverless.yml ./
-COPY src ./src
+COPY . .
 
 # Expor a porta do serverless-offline
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "-e", "setInterval(() => {}, 1 < 30)"]

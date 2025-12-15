@@ -1,4 +1,6 @@
 import { SignaturesRepositoryContract } from "../../application/contracts/SignaturesRepositoryContract.js";
+import { Signature } from "../../domain/entities/Signature.js";
+import { RequestOrigin } from "../../domain/valueObjects/RequestOrigin.js";
 import { dynamoClient, signaturesTableName } from "../aws/dynamoClient.js";
 import {
   PutCommand,
@@ -37,7 +39,7 @@ export class DynamoSignaturesRepository extends SignaturesRepositoryContract
    */
   async findByRequestIdAndSigner(requestId, signerIdentity)
   {
-    const command = GetCommand({
+    const command = new GetCommand({
       TableName: this.tableName,
       Key: {
         requestId,
@@ -50,7 +52,7 @@ export class DynamoSignaturesRepository extends SignaturesRepositoryContract
       return null;
     }
     
-    return this._toEntity(Item);
+    return this._fromItem(Item);
   }
 
   /**
@@ -76,7 +78,7 @@ export class DynamoSignaturesRepository extends SignaturesRepositoryContract
       return null;
     }
 
-    return this._toEntity(Items[0]);  
+    return this._fromItem(Items[0]);  
   }
 
   /**
@@ -281,84 +283,8 @@ export class DynamoSignaturesRepository extends SignaturesRepositoryContract
       adminOnErrorNotificationCount: item.adminOnErrorNotificationCount,
 
       requestOrigin: item.requestOrigin
-        ? RequestOrigin.fromJSON(item.requestOrigin)
+        ? RequestOrigin.fromRaw(item.requestOrigin)
         : null,
     });
-  }
-
-
-
-
-
-
-
-  async queryByShortId(shortId)
-  {
-    const params = {
-      TableName: this.tableName,
-      IndexName: "signatureShortIdIndex",
-      KeyConditionExpression: "shortId = :shortId",
-      ExpressionAttributeValues: {
-        ":shortId": shortId,
-      },
-      Limit: 2,
-    };
-
-    const command   = new QueryCommand(params);
-    const { Items } = await this.client.send(command);
-
-    return Items || [];
-  }
-
-  async queryByRequestId(requestId)
-  {
-    const params = {
-      TableName: this.tableName,
-      KeyConditionExpression: "requestId = :requestId",
-      ExpressionAttributeValues: {
-        ":requestId": requestId,
-      },
-      Limit: 2,
-    };
-
-    const command   = new QueryCommand(params);
-    const { Items } = await this.client.send(command);
-
-    return Items || [];
-  }
-
-  async incrementCheckCounter(key, checkId, initializeIfMissing)
-  {
-    const params = {
-      TableName: this.tableName,
-      Key: {
-        requestId: key.requestId,
-        signerIdentity: key.signerIdentity,
-      },
-      UpdateExpression: "SET checkCounter = if_not_exists(checkCounter, :initial) + :inc",
-      ExpressionAttributeValues: {
-        ":initial": initializeIfMissing ? 0 : 1,
-        ":inc": 1,
-      },
-      ReturnValues: "UPDATED_NEW",
-    };
-
-    const command = new UpdateCommand(params);
-    await this.client.send(command);
-  }
-
-  async findDetailsForStatusCheck(requestId)
-  {
-    const params = {
-      TableName: this.tableName,
-      KeyConditionExpression: "requestId = :requestId",
-      ExpressionAttributeValues: {
-        ":requestId": requestId,
-      },
-      Limit: 1,
-    };
-
-    const { Items } = await this.client.send(new QueryCommand(params));
-    return (Items && Items[0]) || null;
   }
 }

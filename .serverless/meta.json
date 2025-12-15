@@ -1,0 +1,63 @@
+{
+  "/usr/src/app/serverless.yml": {
+    "versionFramework": "4.28.0",
+    "servicePath": "/usr/src/app/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "digitalSignature-v2",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs22.x",
+        "stage": "${opt:stage, 'local'}",
+        "region": "us-east-1"
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "functions": {
+        "checkSignStatus": {
+          "handler": "src/handlers/checkSignStatus.handler",
+          "events": [
+            {
+              "http": {
+                "path": "signature/status/{requestIdOrShortId}",
+                "method": "get",
+                "cors": true
+              }
+            }
+          ]
+        }
+      },
+      "custom": {
+        "serverless-offline": {
+          "noPrependStageInUrl": true,
+          "httpPort": 3000,
+          "lambdaPort": 3002,
+          "host": "0.0.0.0"
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs22.x",
+      "stage": "${opt:stage, 'local'}",
+      "region": "us-east-1"
+    },
+    "error": {
+      "message": "You must sign in or use a license key with Serverless Framework V.4 and later versions. Please use \"serverless login\".",
+      "stack": "Error: You must sign in or use a license key with Serverless Framework V.4 and later versions. Please use \"serverless login\".\n    at Authentication.getAuthenticatedData (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:713:11187)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Authentication.authenticate (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:716:4121)\n    at async TraditionalRunner.resolveVariablesAndAuthenticate (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:725:1394)\n    at async TraditionalRunner.run (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:1396:28091)\n    at async route (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:1571:2848)\n    at async Object.run (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:1572:3876)\n    at async run2 (file:///root/.serverless/releases/4.28.0/package/dist/sf-core.js:1572:5030)"
+    },
+    "serviceRawFile": "service: digitalSignature-v2\n\nprovider:\n  name: aws\n  runtime: nodejs22.x\n  stage: ${opt:stage, 'local'}\n  region: us-east-1\n\nplugins:\n  - serverless-offline\n\nfunctions:\n  checkSignStatus:\n    handler: src/handlers/checkSignStatus.handler\n    events:\n      - http:\n          path: signature/status/{requestIdOrShortId}\n          method: get\n          cors: true\n\n\ncustom:\n  serverless-offline:\n    noPrependStageInUrl: true\n    httpPort: 3000\n    lambdaPort: 3002\n    host: 0.0.0.0\n",
+    "command": [
+      "offline"
+    ],
+    "options": {
+      "stage": "local"
+    },
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

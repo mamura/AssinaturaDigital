@@ -29,7 +29,7 @@ export class RequestOrigin
     });
   }
 
-  toJson()
+  toJSON()
   {
     return {
       client:    this.client,
