@@ -120,22 +120,22 @@ export class DynamoSignaturesRepository extends SignaturesRepositoryContract
       'adminOnErrorNotificationCount',
     ];
 
-    const expressionParts = [];
-    const expressionAttributeNames = {};
+    const expressionParts           = [];
+    const expressionAttributeNames  = {};
     const expressionAttributeValues = {};
 
-    const now = Date.now();
-    let willUpdateStsUpdatedAt = false;
+    const now                                   = Date.now();
+    let willUpdateStsUpdatedAt                  = false;
     let willUpdateRequesterCallbackStsUpdatedAt = false;
 
     for (const field of updatableFields) {
-      if (typeof partial[field] !== 'undefined') {
+      if (typeof partial[field] === 'undefined') {
         continue;
       }
 
       expressionParts.push(`#${field} = :${field}`);
-      expressionAttributeNames[`#${field}`] = field;
-      expressionAttributeValues[`:${field}`] = partial[field];
+      expressionAttributeNames[`#${field}`]   = field;
+      expressionAttributeValues[`:${field}`]  = partial[field];
 
       if (field === 'sts') {
         willUpdateStsUpdatedAt = true;

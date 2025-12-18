@@ -1,12 +1,17 @@
 {
   "name": "digital-signature-v2",
   "version": "1.0.0",
-  "description": "Digital signature API (rewritten, Node 22 + Serverless 4).",
+  "description": "Digital signature API (rewritten with Node 22).",
   "type": "module",
   "scripts": {
-    "dev": "serverless offline --stage local",
-    "deploy": "serverless deploy",
-    "invoke:local": "serverless invoke local"
+    "dev": "node src/dev/createDynamoTables.js",
+    "dynamo:init": "node src/dev/createDynamoTables.js",
+    "dynamo:test-insert": "node src/dev/testDynamoInsert.js",
+    "dynamo:test-signature-repo": "node src/dev/testDynamoSignaturesRepository.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "echo \"No linter configured yet\""
   },
   "engines": {
     "node": ">=22"
@@ -15,5 +20,9 @@
     "@aws-sdk/client-dynamodb": "^3.670.0",
     "@aws-sdk/client-sqs": "^3.670.0",
     "@aws-sdk/lib-dynamodb": "^3.664.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.16",
+    "vitest": "^4.0.16"
   }
 }

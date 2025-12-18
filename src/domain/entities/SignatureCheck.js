@@ -1,4 +1,4 @@
-import { RequestOrigin } from "../valueObjects/RequestOrigin";
+import { RequestOrigin } from "../valueObjects/RequestOrigin.js";
 
 export class SignatureCheck
 {

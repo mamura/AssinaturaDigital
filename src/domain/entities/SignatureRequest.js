@@ -5,20 +5,21 @@ export class SignatureRequest
     shortId,
     requester,
     signers,
-    unsignerDocument,
+    unsignedDocumentLocation,
     status,
     provider,
     createdAt,
   }) {
-    this.requestId = requestId;
-    this.shortId = shortId;
-    this.requester = requester;
-    this.signers = signers;
+    this.requestId                = requestId;
+    this.shortId                  = shortId;
+    this.requester                = requester;
+    this.signers                  = signers;
     this.unsignedDocumentLocation = unsignedDocumentLocation;
-    this.status = status;
-    this.provider = provider;
-    this.createdAt = createdAt;
+    this.status                   = status;
+    this.provider                 = provider;
+    this.createdAt                = createdAt;
   }
+
 
   static create({
     requestId,

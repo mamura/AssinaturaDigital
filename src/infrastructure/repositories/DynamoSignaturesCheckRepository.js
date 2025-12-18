@@ -5,7 +5,7 @@ import {
   signaturesCheckTableName,
 } from '../aws/dynamoClient.js';
 
-import { SignatureCheck } from '../../domain/entities/signatures/SignatureCheck.js';
+import { SignatureCheck } from '../../domain/entities/SignatureCheck.js';
 import { RequestOrigin } from '../../domain/valueObjects/RequestOrigin.js';
 import { SignatureCheckRepositoryContract } from '../../application/contracts/SignatureCheckRepositoryContract.js';
 

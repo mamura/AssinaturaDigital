@@ -1,10 +1,11 @@
 
 import { PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { dynamoClient, signersAuthorizationsTableName } from "../aws/dynamoClient";
-import { RequestOrigin } from '../../domain/valueObjects/RequestOrigin';
-import { SignersAuthorizationRepositoryContract } from '../../application/contracts/SignersAuthorizationRepositoryContract';
+import { RequestOrigin } from '../../domain/valueObjects/RequestOrigin.js';
+import { SignersAuthorizationRepositoryContract } from '../../application/contracts/SignersAuthorizationRepositoryContract.js';
+import { SignerAuthorization } from '../../domain/entities/SignerAuthorization.js';
 
-export class DynamoSignerAuthorizationDynamoRepository extends SignersAuthorizationRepositoryContract
+export class DynamoSignerAuthorizationRepository extends SignersAuthorizationRepositoryContract
 {
   constructor(
     docClient = dynamoClient,
@@ -63,7 +64,7 @@ export class DynamoSignerAuthorizationDynamoRepository extends SignersAuthorizat
     let willUpdateStsUpdatedAt      = false;
 
     for (const field of updatableFields) {
-      if (typeof partial[field] !== 'undefined') { 
+      if (typeof partial[field] === 'undefined') { 
         continue;
       }
 
